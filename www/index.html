@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="styles.css">
+    <title>Đạo Tôn - Text Base RPG (Bản Tu Tiên Chân Thực)</title>
+    <style>
+        
+    </style>
+</head>
+<body>
+    <div id="sect-modal" class="modal">
+        <div class="modal-content">
+            <h2>--- Khởi Đầu Tiên Lộ ---</h2>
+            <p>Cảnh giới đã đủ, mời đạo hữu chọn nơi tu hành:</p>
+            <div id="sect-selection" class="sect-grid">
+                <button class="btn-sect" style="background:#1e3a8a;" onclick="joinSect('Kiếm Tông')">
+                    <b>Kiếm Tông</b><br><span>+20% Công kích</span>
+                </button>
+                <button class="btn-sect" style="background:#14532d;" onclick="joinSect('Dược Cốc')">
+                    <b>Dược Cốc</b><br><span>+Khả năng hồi phục</span>
+                </button>
+                <button class="btn-sect" style="background:#7f1d1d;" onclick="joinSect('Ma Tông')">
+                    <b>Ma Tông</b><br><span>+Hút máu khi đánh</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+<div id="game-container">
+    <!-- Cột 2: Tương tác chính -->
+    <div class="panel combat-panel">
+        
+
+        <div class="top-actions">
+            <select class ="btn-map" id="map-selection" onchange="changeMap()"></select>
+            <button class="btn-dungeon" onclick="diBiCanh()">Vào Bí Cảnh (Vé: <span id="so-ve-bicong">0</span>)</button>
+        </div>
+            <!-- Render qua JS -->
+        
+
+        <div id="log-box"></div>
+
+        <div id="enemy-panel">
+            <div id="enemy-name">Đang tìm mục tiêu...</div>
+            <div id="enemy-stats">ATK: 0 | DEF: 0</div>
+            <div class="progress-bg" style="height: 18px; margin-bottom: 0;">
+                <div id="bar-enemy-hp" class="progress-fill fill-enemy"></div>
+                <div id="text-enemy-hp" class="progress-text">0 / 0</div>
+            </div>
+        </div>
+
+        <!-- 4 nút chức năng chính -->
+        <div class="action-grid">
+            <button onclick="lichLuyen()">Lịch Luyện</button>
+            <button onclick="nghiNgoi()">Vận Công</button>
+            <button id="btn-dot-pha" onclick="dotPha()">Đột Phá</button>
+            <button id="btn-auto-lich-luyen" onclick="toggleAuto()">Treo Máy</button>
+        </div>
+    </div>
+    <!-- Tab Switcher -->   
+    <div class="panel info-panel">
+        <div class="tab-controls">
+            <button class="tab-btn active" onclick="switchTab('character', this)">Bản Tôn</button>
+            <button class="tab-btn" onclick="switchTab('inventory', this)">Hành Trang</button>
+        </div>
+        <!-- KHU VỰC HIỂN THỊ NỘI DUNG TAB -->
+        <div id="tab-content">
+            <div id="character-tab" class="tab-pane active">
+                <!-- Cột 1: Thuộc tính & Trang bị -->
+                <div class="stat-row"><span>Chiến Lực:</span> <span id="chien-luc" class="cp-text">0</span></div>
+                <div class="stat-row"><span>Cảnh Giới:</span> <span id="canh-gioi" class="realm-text">Phàm Nhân</span></div>
+                <div class="stat-row"><span>Tông Môn:</span> <span id="tong-mon" style="color:#93c5fd">Tán Tu</span></div>
+                
+                <div style="margin-top: 10px; font-size: 12px;">Tu Vi (Đột Phá: <span id="ty-le-dot-pha" style="color:#4ade80">100%</span>):</div>
+                <div class="progress-bg"><div id="bar-exp" class="progress-fill fill-exp"></div><div id="text-exp" class="progress-text">0 / 100</div></div>
+                
+                <div style="font-size: 12px;">Khí Huyết:</div>
+                <div class="progress-bg"><div id="bar-hp" class="progress-fill fill-hp"></div><div id="text-hp" class="progress-text">100 / 100</div></div>
+                
+                <div style="font-size: 12px;">Linh Lực:</div>
+                <div class="progress-bg"><div id="bar-mp" class="progress-fill fill-mp"></div><div id="text-mp" class="progress-text">50 / 50</div></div>
+                
+                <div class="stat-row"><span>Tấn công (ATK):</span> <span id="tan-cong" class="stat-value">10</span></div>
+                <div class="stat-row"><span>Hộ Thể (DEF):</span> <span id="phong-thu" class="stat-value">5</span></div>
+                <div class="stat-row" style="color:#fde047; font-weight: bold; font-size: 15px; margin-top: 5px;"><span>Linh Thạch:</span> <span><span id="linh-thach">0</span> 💎</span></div>
+                
+                <h3 style="margin-top: 15px;">Công Pháp & Luyện Thể</h3>
+                <select id="skill-selection" onchange="equipSkill()">
+                    <option value="">[Chưa trang bị Công Pháp]</option>
+                </select>
+                <div class="box-item flex-between" style="border-color:#e11d48;">
+                    <div>Nhục Thân: <b style="color:#e11d48">Lv.<span id="luyen-the-lv">0</span></b></div>
+                    <button class="btn-upgrade" style="background:#7f1d1d;" onclick="upgradeLuyenThe()">Rèn Thể</button>
+                </div>
+
+                <h3 style="margin-top: 15px;">Pháp Bảo Bản Mệnh</h3>
+                <div id="trang-bi-list"></div>
+            </div>
+            <div id="inventory-tab" class="tab-pane">
+                <h3>Bảng Cáo Thị (Nhiệm Vụ)</h3>
+                <div class="quest-box" id="quest-container">
+                    <div id="quest-desc" style="font-size: 13px; margin-bottom: 5px; color: #e0e0e0;">Đang tìm nhiệm vụ...</div>
+                    <div class="flex-between">
+                        <span id="quest-reward" style="color:#fde047; font-size: 12px; font-weight:bold;">Thưởng: 0 💎</span>
+                        <div>
+                            <button class="btn-upgrade" onclick="refreshQuest()">Đổi (50💎)</button>
+                            <button class="btn-upgrade" style="background:#166534; color:#bbf7d0;" onclick="submitQuest()">Trả NV</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-shop-open" onclick="openShop()">THƯƠNG THÀNH</button>
+
+                <h3 style="margin-top: 15px;">Hành Trang (Túi Trữ Vật)</h3>
+                <!-- Khôi phục hiển thị Buff Tụ Khí -->
+                <div class="stat-row" style="color:#4ade80; font-size: 12px;"><span>Buff Tụ Khí:</span> <span id="buff-tu-khi">0 lượt</span></div>
+                <div class="stat-row" style="color:#c084fc; font-size: 12px;"><span>Thế Mạng Phù:</span> <span id="so-bua-chu">0</span></div>
+                <div id="inventory-list" style="flex-grow: 1; overflow-y: auto;"></div>
+                
+                <div style="display:flex; gap:10px; margin-top:15px;">
+                    <button onclick="saveGame(true)">Lưu Game</button>
+                    <button onclick="resetGame()" style="color:#ef4444; border-color:#ef4444;">Đầu Thai</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="shop-modal" class="modal" onclick="closeShopOutside(event)">
+    <div class="modal-content shop-modal-content">
+        <div class="shop-modal-header">
+            <h2>THƯƠNG CÁC & LUYỆN ĐAN</h2>
+            <button class="btn-modal-close" onclick="closeShop()">×</button>
+        </div>
+        <div class="shop-balance">Linh Thạch: <span id="modal-linh-thach">0</span> 💎</div>
+
+        <div class="shop-list">
+            <div class="shop-row">
+                <span title="Hồi 30% HP">Hồi Huyết Đan (2 Dược)</span>
+                <button class="btn-upgrade" onclick="craftItem('Hồi Huyết Đan')">Luyện</button>
+            </div>
+            <div class="shop-row">
+                <span title="+10% Tỷ lệ Đột Phá">Phá Cảnh Đan (5 Dược + 2 Khoáng)</span>
+                <button class="btn-upgrade" onclick="craftItem('Phá Cảnh Đan')">Luyện</button>
+            </div>
+            <div class="shop-row">
+                <span title="Thêm một lượt vào Bí Cảnh">Mua Vé Bí Cảnh (500💎)</span>
+                <button class="btn-upgrade" onclick="buyShop('Vé Bí Cảnh', 500)">Mua</button>
+            </div>
+            <div class="shop-row">
+                <span title="Cứu một lần khi trọng thương">Mua Thế Mạng Phù (1000💎)</span>
+                <button class="btn-upgrade" onclick="buyShop('Thế Mạng Phù', 1000)">Mua</button>
+            </div>
+            <div class="shop-row">
+                <span title="X2 Tu Vi trong 100 lượt">Mua Tụ Khí Trận (500💎)</span>
+                <button class="btn-upgrade" onclick="buyShop('Tụ Khí Trận', 500)">Mua</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+<div id="version-display"></div>
+</body>
+</html>

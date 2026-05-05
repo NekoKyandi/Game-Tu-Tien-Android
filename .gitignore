@@ -1,0 +1,36 @@
+node_modules/
+
+# Build output
+dist/
+out/
+build/
+*.apk
+*.aab
+*.ap_
+*.aar
+
+# Local Android/Gradle state
+.gradle/
+local.properties
+android/local.properties
+android/.gradle/
+android/build/
+android/app/build/
+
+# Release signing secrets
+*.jks
+*.keystore
+*.p12
+
+# IDE/user files
+.idea/
+android/.idea/
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/caches/
+*.iml
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db

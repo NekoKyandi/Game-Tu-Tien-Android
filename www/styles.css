@@ -1,0 +1,806 @@
+#version-display {
+    position: fixed;
+    top: 10px;    /* Cách dọc */
+    left: 10px;     /* Cách ngang */
+    color: #f7e2c4;
+    font-size: 13px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-shadow: 1px 1px 2px black; /* Cho dễ nhìn trên nền tối */
+    opacity: 0.8;
+    pointer-events: none;
+}
+body {
+    background-color: #0d0d0d;
+    color: #e0e0e0;
+    font-family: "Segoe UI", "Roboto", "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    
+    /* Cấu hình linh hoạt cho mọi màn hình */
+    flex-direction: row; /* Ép các panel dàn hàng ngang */
+    justify-content: center;
+    align-items: flex-start;
+    overflow: hidden; /* Chống cuộn toàn trang */
+    width: 100vw;
+    height: 100vh;
+    box-sizing: border-box;
+}
+#game-container {display: flex;
+    flex-direction: row; /* Dàn hàng ngang */
+    justify-content: space-around; /* Chia đều khoảng cách */
+    align-items: flex-start;
+    width: 100vw; /* Full chiều ngang màn hình */
+    height: 100vh; /* Full chiều cao màn hình */
+    overflow: hidden; /* Chặn thanh cuộn ngoài cùng */
+    padding: 10px;
+    box-sizing: border-box;
+    }
+.panel {
+    background-color: #1a1a1a;
+    border: 1px solid #c09d53;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    
+    /* QUAN TRỌNG: Điều chỉnh để không bị tràn trên Mobile */
+    width: 31%; /* Chia đều 3 bảng */
+    height: 92vh; /* Để lại một chút lề trên dưới */
+    display: flex;
+    flex-direction: column;
+    
+    /* Cho phép cuộn nội dung bên trong từng bảng */
+    overflow-y: auto; 
+    box-sizing: border-box;
+}
+h2, h3 {
+    color: #c09d53;
+    text-align: center;
+    margin-top: 0;
+    border-bottom: 1px solid #554422;
+    padding-bottom: 8px;
+    font-size: 16px;
+    text-transform: uppercase;
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+
+.stat-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px; border-bottom: 1px dashed #333; padding-bottom: 3px; }
+.stat-value { color: #4ade80; font-weight: bold; }
+.realm-text { color: #c084fc; font-weight: bold; font-size: 15px; text-shadow: 0 0 5px rgba(192, 132, 252, 0.4); }
+
+/* Progress Bars */
+.progress-bg { width: 100%; background-color: #222; border-radius: 2px; height: 16px; margin-bottom: 10px; position: relative; border: 1px solid #444; overflow: hidden; }
+.progress-fill { height: 100%; transition: width 0.3s; width: 0%; }
+.progress-text { position: absolute; width: 100%; text-align: center; top: 0px; font-size: 12px; font-weight: bold; color: white; text-shadow: 1px 1px 1px #000; }
+.fill-hp { background-color: #e11d48; }
+.fill-mp { background-color: #2563eb; }
+.fill-exp { background-color: #d97706; }
+
+#log-box { flex-grow: 1; overflow-y: auto; background-color: #050505; padding: 10px; border: 1px solid #333; margin-bottom: 5px; font-size: 13px; line-height: 1.6; font-family: inherit; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #111; }
+::-webkit-scrollbar-thumb { background: #c09d53; border-radius: 2px; }
+
+button { width: 100%; padding: 8px; margin-bottom: 8px; background-color: #262626; color: #c09d53; border: 1px solid #c09d53; cursor: pointer; font-family: inherit; font-size: 13px; border-radius: 2px; transition: 0.2s; font-weight: bold; }
+button:hover:not(:disabled) { background-color: #c09d53; color: #000; box-shadow: 0 0 8px rgba(192, 157, 83, 0.6); }
+button:disabled { background-color: #222; color: #555; border-color: #444; cursor: not-allowed; box-shadow: none; }
+
+.btn-auto-combat { background-color: #991b1b !important; color: white !important; border-color: #ef4444; }
+.btn-upgrade { font-size: 11px; width: auto; padding: 3px 6px; margin: 0; background: #333; border-color: #666; color: #ddd;}
+
+.log-combat { color: #fca5a5; } .log-gain { color: #86efac; } .log-system { color: #fde047; } .log-kyngo { color: #d8b4fe; font-weight: bold; } .log-detail { color: #93c5fd; } .log-pk { color: #fb923c; font-weight: bold; font-style: italic; }
+
+.box-item { background-color: #222; padding: 8px; margin-bottom: 5px; border: 1px solid #444; font-size: 12px; border-radius: 3px;}
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+
+.tier-0 { color: #a3a3a3; } .tier-1 { color: #4ade80; } .tier-2 { color: #60a5fa; } .tier-3 { color: #c084fc; }
+
+select { width: 100%; padding: 8px; background: #111; color: #c09d53; border: 1px solid #c09d53; margin-bottom: 10px; font-family: inherit; font-weight: bold;}
+.quest-box { background: rgba(192, 157, 83, 0.1); border: 1px solid rgba(192, 157, 83, 0.5); padding: 8px; margin-bottom: 15px; border-radius: 3px; }
+
+
+
+/* --- PHẦN RESPONSIVE CHO DI ĐỘNG --- */
+
+@media screen and (max-width: 768px) {
+
+    .progress-bg {
+        width: 100%; background-color: #222;
+        border-radius: 2px;
+        height: 16px;
+        margin-bottom: 10px;
+        position: relative;
+        border: 1px solid #444;
+        overflow: hidden;
+    }
+
+    html, body {
+        width: 100%;
+        overflow-x: hidden;
+        margin: 0;
+        padding: 0;
+        justify-content: center; /* Căn giữa container theo chiều ngang */
+        background-color: #2c1f23; /* Màu nền tối của đạo hữu */
+    }
+    
+    #game-container {
+        display: flex;
+        flex-direction: column; /* Dàn hàng dọc */
+        flex-shrink: auto auto;
+        height: 100vh; /* Full màn hình điện thoại */
+        overflow: hidden;
+        width: 100vw;
+        gap: 10px;
+        padding: 10px;
+        max-width: 500px; /* Giới hạn chiều rộng để giống mobile */
+        margin: 0 auto;   /* Đảm bảo căn giữa tuyệt đối */
+        box-sizing: border-box; /* Quan trọng: Để padding không làm tràn viền */
+    }
+
+    /* Layout phía trên */
+    .top-actions {
+        display: flex;
+        gap: 5px;
+        margin-bottom: 5px;
+    }
+    #sect-selection { flex: 3; display: grid; grid-template-columns: 1fr 1fr 1fr; }
+    #map-selection { flex: 1; height: 100%; }
+
+    /* 4 nút chính */
+    .action-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr; /* Chia 1 hàng, mỗi hàng 4 nút */
+        gap: 5px;
+    }
+
+    /* Hệ thống Tab bên dưới */
+    .tab-controls {
+        display: flex;
+        background: #222;
+        border-top: 2px solid #444;
+    }
+    .tab-btn {
+        flex: 1;
+        padding: 12px;
+        background: none;
+        border: none;
+        color: #888;
+        border-bottom: 2px solid transparent;
+    }
+    .tab-btn.active {
+        color: #fde047;
+        border-bottom: 2px solid #fde047;
+        background: #333;
+    }
+
+    /* Nội dung hiển thị của Tab */
+    .tab-pane {
+        display: none; /* Ẩn mặc định */
+        height: 100%;
+        overflow-y: auto;
+        padding: 10px;
+    }
+    .tab-pane.active {
+        display: block; /* Hiện khi được chọn */
+    }
+    
+    #tab-content {
+        height: 100%;
+        flex-grow: 1; /* Chiếm phần còn lại của màn hình */
+        overflow-y: auto;
+        background: #111;
+    }
+
+    .panel {
+        width: 100%;
+        box-sizing: border-box; /* Đảm bảo padding không làm tràn màn hình */
+    }
+
+    /* Ẩn thanh cuộn cho khu vực nội dung Tab */
+    #tab-content, .tab-pane {
+        /* Cho trình duyệt Chrome, Safari và các trình duyệt dùng nhân Chromium (Edge) */
+        -ms-overflow-style: none;  /* Cho Internet Explorer và Edge cũ */
+        scrollbar-width: none;     /* Cho Firefox */
+    }
+
+    #tab-content::-webkit-scrollbar, 
+    .tab-pane::-webkit-scrollbar {
+        display: none;             /* Cho Chrome, Safari và Edge mới */
+    }
+
+    /* Tăng kích thước nút bấm để dễ thao tác bằng ngón tay */
+    button {
+        min-height: 45px;
+        font-size: 14px !important;
+        margin: 2px 0;
+    }
+
+    /* Điều chỉnh lại khu vực Log game cho gọn trên mobile */
+    #log-box {
+        height: 20%; 
+        font-size: 12px;
+    }
+
+    /* Nếu bảng chọn Tông môn đang dàn hàng ngang 3 cột, ép về 1 cột cho dễ nhìn */
+    #sect-selection {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Điều chỉnh các dòng chỉ số cho dễ đọc trên màn hình hẹp */
+    .stat-row {
+        font-size: 13px;
+        padding: 4px 0;
+    }
+    /* Lớp phủ mờ toàn màn hình */
+    .modal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.9); /* Nền tối đen */
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 1; /* Luôn nằm trên cùng */
+    }
+
+    /* Khung nội dung Pop-up */
+    .modal-content {
+        background: #1a1a1a;
+        padding: 25px;
+        border: 2px solid #fde047;
+        border-radius: 15px;
+        text-align: center;
+        max-width: 90%;
+        box-shadow: 0 0 20px #fde04755;
+    }
+
+    #sect-modal {
+        display: none; /* Mặc định ẩn */
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.9);
+    }
+
+    .sect-grid {
+        display: grid;
+        grid-template-columns: 1fr; /* Mobile thì xếp dọc */
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .btn-sect {
+        padding: 15px;
+        border: 1px solid #444;
+        border-radius: 8px;
+        color: white;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .btn-sect:hover { transform: scale(1.05); }
+    .btn-sect span { font-size: 12px; opacity: 0.8; }
+    .btn-dungeon { background: #166534; color: #bbf7d0; border-color: #4ade80; font-size: 60%; text-transform: uppercase; }
+    .btn-auto-combat { background-color: #991b1b !important; color: white !important; border-color: #ef4444; }
+
+    /* Khung hiển thị Quái Vật */
+    #enemy-panel { background: rgba(159, 18, 57, 0.1); border: 1px solid #9f1239; padding: 10px; margin-bottom: 10px; border-radius: 3px; text-align: center; }
+    #enemy-name { color: #fca5a5; font-weight: bold; font-size: 15px; margin-bottom: 5px; text-transform: uppercase;}
+    #enemy-stats { font-size: 11px; color: #aaa; margin-bottom: 5px; }
+    .fill-enemy { background-color: #9f1239; }
+    /* Responsive cho PC */
+    @media (min-width: 768px) {
+        .sect-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+}
+
+/* Tùy chỉnh thêm cho điện thoại cực nhỏ (dưới 480px) */
+@media screen and (max-width: 480px) {
+    h2, h3 {
+        font-size: 16px;
+        margin-top: 5px;
+    }
+    
+    .progress-text {
+        font-size: 10px;
+    }
+}
+
+/* Layout pass: mobile-first sizing and safer scroll containers. */
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    min-height: 100dvh;
+    overflow: hidden;
+}
+
+body {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+#game-container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    width: 100%;
+    height: 100dvh;
+    padding: 10px;
+    overflow: hidden;
+}
+
+.panel {
+    flex: 1 1 0;
+    min-width: 0;
+    width: auto;
+    height: 100%;
+}
+
+.combat-panel {
+    display: flex;
+    min-height: 0;
+}
+
+.info-panel {
+    display: grid !important;
+    grid-template-rows: auto minmax(0, 1fr) !important;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.top-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(130px, 1fr);
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.top-actions select,
+.top-actions button,
+.action-grid button {
+    margin-bottom: 0;
+}
+
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+}
+
+button {
+    min-height: 40px;
+    overflow-wrap: anywhere;
+}
+
+#log-box {
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.tab-controls {
+    display: flex;
+    gap: 4px;
+    background: #161616;
+    border-bottom: 1px solid #333;
+}
+
+.tab-btn {
+    flex: 1 1 0;
+    margin: 0;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: #222;
+    color: #888;
+}
+
+.tab-btn.active {
+    color: #fde047;
+    border-bottom-color: #fde047;
+    background: #333;
+}
+
+#tab-content {
+    min-height: 0;
+    overflow: hidden;
+    background: #111;
+}
+
+.tab-pane {
+    display: none;
+    height: 100%;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    padding: 16px;
+}
+
+.modal-content {
+    width: min(420px, 100%);
+    max-height: 90dvh;
+    overflow-y: auto;
+    background: #1a1a1a;
+    padding: 20px;
+    border: 2px solid #fde047;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 0 20px #fde04755;
+}
+
+.sect-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.btn-sect {
+    padding: 14px 10px;
+    border: 1px solid #444;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-sect:hover {
+    transform: scale(1.03);
+}
+
+.btn-sect span {
+    font-size: 12px;
+    opacity: 0.85;
+}
+
+.btn-dungeon {
+    background: #166534;
+    color: #bbf7d0;
+    border-color: #4ade80;
+    text-transform: uppercase;
+}
+
+#enemy-panel {
+    background: rgba(159, 18, 57, 0.1);
+    border: 1px solid #9f1239;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 3px;
+    text-align: center;
+}
+
+#enemy-name {
+    color: #fca5a5;
+    font-weight: bold;
+    font-size: 15px;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+}
+
+#enemy-stats {
+    font-size: 11px;
+    color: #aaa;
+    margin-bottom: 5px;
+}
+
+.fill-enemy {
+    background-color: #9f1239;
+}
+
+@media screen and (max-width: 768px) {
+    #version-display {
+        top: auto;
+        left: 12px;
+        bottom: calc(env(safe-area-inset-bottom, 0px) + 6px);
+        font-size: 11px;
+    }
+
+    #game-container {
+        width: 100%;
+        max-width: none;
+        height: 100dvh;
+        padding: calc(env(safe-area-inset-top, 0px) + 8px) 8px calc(env(safe-area-inset-bottom, 0px) + 8px);
+        gap: 8px;
+    }
+
+    .panel {
+        width: 100%;
+        min-height: 0;
+        padding: 8px;
+    }
+
+    .combat-panel {
+        flex: 0 0 44%;
+    }
+
+    .info-panel {
+        flex: 1 1 56%;
+    }
+
+    .top-actions {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .action-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    button,
+    select {
+        min-height: 44px;
+        font-size: 13px !important;
+    }
+
+    #log-box {
+        height: auto;
+        font-size: 12px;
+        line-height: 1.45;
+    }
+
+    .sect-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .flex-between {
+        gap: 8px;
+    }
+}
+
+@media screen and (max-width: 380px) {
+    #game-container {
+        padding-left: 6px;
+        padding-right: 6px;
+        gap: 6px;
+    }
+
+    .panel {
+        padding: 7px;
+    }
+
+    button,
+    select {
+        font-size: 12px !important;
+    }
+}
+
+/* Compact mobile controls: keep the old two-row game layout and give content more room. */
+@media screen and (max-width: 768px) {
+    #game-container {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .combat-panel {
+        flex: 0 0 38%;
+        padding: 6px;
+    }
+
+    .info-panel {
+        flex: 1 1 62%;
+        padding: 6px;
+    }
+
+    .top-actions {
+        grid-template-columns: minmax(0, 1.15fr) minmax(96px, 0.85fr);
+        gap: 4px;
+        margin-bottom: 4px;
+    }
+
+    .action-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 4px;
+        margin-top: 4px;
+    }
+
+    button,
+    select {
+        min-height: 34px;
+        padding: 5px 4px;
+        font-size: 11px !important;
+        line-height: 1.15;
+    }
+
+    .btn-dungeon {
+        font-size: 10px !important;
+    }
+
+    .tab-btn {
+        min-height: 34px;
+        padding: 6px 4px;
+        font-size: 12px !important;
+    }
+
+    #enemy-panel {
+        padding: 6px;
+        margin-bottom: 5px;
+    }
+
+    #enemy-name {
+        font-size: 13px;
+        margin-bottom: 3px;
+    }
+
+    #enemy-stats {
+        margin-bottom: 3px;
+    }
+
+    #log-box {
+        padding: 7px;
+        margin-bottom: 4px;
+    }
+
+    .progress-bg {
+        height: 14px;
+        margin-bottom: 6px;
+    }
+
+    .box-item {
+        padding: 6px;
+        margin-bottom: 4px;
+    }
+
+    .btn-upgrade {
+        min-height: 28px;
+        padding: 3px 6px;
+        font-size: 10px !important;
+    }
+}
+
+@media screen and (max-width: 380px) {
+    .combat-panel {
+        flex-basis: 36%;
+    }
+
+    button,
+    select {
+        min-height: 32px;
+        font-size: 10px !important;
+    }
+}
+
+/* Vietnamese readable font stack for Android WebView, Windows and desktop browser. */
+body,
+button,
+select,
+input,
+textarea,
+.modal-content,
+#log-box {
+    font-family: "Segoe UI", "Roboto", "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+    letter-spacing: 0;
+    text-rendering: optimizeLegibility;
+}
+
+.btn-shop-open {
+    margin: 6px 0 12px;
+    background: rgba(192, 157, 83, 0.16);
+    border-color: #c09d53;
+    color: #fde68a;
+    text-transform: uppercase;
+}
+
+.shop-modal-content {
+    width: min(440px, calc(100vw - 24px));
+    padding: 18px 20px 24px;
+    border-color: #c09d53;
+    border-radius: 6px;
+    background: #151515;
+}
+
+.shop-modal-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #554422;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+}
+
+.shop-modal-header h2 {
+    margin: 0;
+    border: 0;
+    padding: 0;
+    color: #c09d53;
+    letter-spacing: 1px;
+}
+
+.btn-modal-close {
+    width: 34px;
+    min-height: 34px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #c09d53;
+    font-size: 28px;
+    line-height: 1;
+}
+
+.btn-modal-close:hover:not(:disabled) {
+    background: transparent;
+    color: #fde68a;
+    box-shadow: none;
+}
+
+.shop-balance {
+    margin-bottom: 18px;
+    color: #fde047;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.shop-list {
+    display: grid;
+    gap: 8px;
+}
+
+.shop-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    min-height: 38px;
+    padding: 6px 8px;
+    border: 1px solid #444;
+    border-radius: 3px;
+    background: #202020;
+    color: #e5e7eb;
+    font-size: 12px;
+    text-align: left;
+}
+
+.shop-row span {
+    overflow-wrap: anywhere;
+}
+
+.shop-row .btn-upgrade {
+    min-width: 44px;
+}
+
+@media screen and (max-width: 768px) {
+    .btn-shop-open {
+        min-height: 36px;
+        margin: 4px 0 10px;
+    }
+
+    .shop-modal-content {
+        padding: 16px 14px 18px;
+    }
+
+    .shop-modal-header h2 {
+        font-size: 14px;
+    }
+
+    .shop-balance {
+        font-size: 14px;
+    }
+
+    .shop-row {
+        min-height: 34px;
+        gap: 8px;
+        font-size: 11px;
+    }
+}
