@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="../styles.css">
+    <title>Dao Ton - Dang Ky</title>
+</head>
+<body class="auth-page">
+    <main class="auth-container">
+        <h1 class="game-title">KHOI TAO TIEN CAN</h1>
+
+        <section class="login-box">
+            <div class="input-group">
+                <label>Linh Dia (Email)</label>
+                <input type="email" id="reg-email" placeholder="Nhap email...">
+            </div>
+
+            <div class="input-group">
+                <label>Mat Ma</label>
+                <input type="password" id="reg-password" placeholder="Thiet lap mat ma...">
+            </div>
+
+            <div class="input-group">
+                <label>Xac Nhan Mat Ma</label>
+                <input type="password" id="reg-repassword" placeholder="Nhap lai mat ma...">
+            </div>
+
+            <div class="captcha-group">
+                <input type="checkbox" id="reg-not-robot">
+                <label for="reg-not-robot">Xac thuc Tien Can</label>
+            </div>
+
+            <button class="btn-login" onclick="handleRegister()">KHAI MO TIEN KHIEU</button>
+
+            <div class="register-link">
+                <p>Da co tien can? <a href="../index.html">Tro ve Dang Nhap</a></p>
+            </div>
+        </section>
+
+        <div class="version-tag">Phien ban Android</div>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="../scriptFirebase.js"></script>
+    <div id="version-display">
+    Phiên bản: Đang tải...
+    </div>
+</body>
+</html>

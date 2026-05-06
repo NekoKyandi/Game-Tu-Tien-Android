@@ -3,41 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="styles.css">
-    <title>Dao Ton - Dang Nhap</title>
+    <link rel="stylesheet" href="../styles.css">
+    <title>Dao Ton - Tao Nhan Vat</title>
 </head>
 <body class="auth-page">
     <main class="auth-container">
-        <h1 class="game-title">TU TIEN GIOI</h1>
+        <h1 class="game-title">KHOI TAO NHAN VAT</h1>
 
         <section class="login-box">
             <div class="input-group">
                 <label>Dao Hieu</label>
-                <input type="email" id="username" placeholder="Nhap email...">
+                <input type="text" id="char-name" placeholder="Dat dao hieu...">
             </div>
 
-            <div class="input-group">
-                <label>Mat Ma</label>
-                <input type="password" id="password" placeholder="Nhap mat ma...">
-            </div>
-
-            <div class="captcha-group">
-                <input type="checkbox" id="not-robot">
-                <label for="not-robot">Xac thuc Tien Can</label>
-            </div>
-
-            <button class="btn-login" onclick="handleLogin()">BAT DAU TU TIEN</button>
+            <button class="btn-login" onclick="handleCreateCharacter()">BAT DAU TU TIEN</button>
 
             <div class="register-link">
-                <p>Chua khai mo tien khieu? <a href="html/register.html">Dang Ky</a></p>
+                <p>Muon doi tai khoan? <a href="../index.html">Tro ve Dang Nhap</a></p>
             </div>
         </section>
+
+        <div class="version-tag">Phien ban Android</div>
     </main>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="scriptFirebase.js"></script>
+    <script src="../script.js"></script>
+    <script src="../scriptFirebase.js"></script>
     <div id="version-display">
     Phiên bản: Đang tải...
     </div>

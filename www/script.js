@@ -1,4 +1,4 @@
-﻿// ----- CÆ  Sá»ž Dá»® LIá»†U GAME -----
+﻿
 // ----- CẤU TRÚC LƯU TRỮ HỆ THỐNG (CHỈ KHAI BÁO 1 LẦN) -----
 let fs, path, ipcRenderer, saveFilePath;
 
@@ -80,31 +80,38 @@ try {
 // Đại Cảnh Giới & Tỷ lệ đột phá Đại Bình Cảnh
 const dsCanhGioi = [
     { name: "Phàm Nhân", maxLevel: 1, rate: 100 },
-    { name: "Luyện Khí Kỳ", maxLevel: 9, rate: 50 },
-    { name: "Trúc Cơ Kỳ", maxLevel: 9, rate: 50 },
-    { name: "Kim Đan Kỳ", maxLevel: 9, rate: 30 },
-    { name: "Nguyên Anh Kỳ", maxLevel: 9, rate: 10 },
-    { name: "Hóa Thần Kỳ", maxLevel: 9, rate: 5 }
+    { name: "Luyện Khí Kỳ", maxLevel: 9, rate: 30 },
+    { name: "Trúc Cơ Kỳ", maxLevel: 9, rate: 30 },
+    { name: "Kim Đan Kỳ", maxLevel: 9, rate: 10 },
+    { name: "Nguyên Anh Kỳ", maxLevel: 9, rate: 5 },
+    { name: "Hóa Thần Kỳ", maxLevel: 9, rate: 1 }
 ];
 
 const trangBiType = ["Phàm", "Linh", "Pháp", "Tiên"];
 
 // Scale Map khổng lồ theo cảnh giới
 const dsBanDo = [
-    { id: 0, name: "Ngoại Ô Thôn Làng", minRealm: 0, mobName: ["Lợn Rừng", "Sói Xám"], eAtk: 15, eDef: 2, eHp: 50, expMin: 15, expMax: 25, ltMin: 2, ltMax: 5, dropRate: 0.3 },
-    { id: 1, name: "Yêu Thú Sâm Lâm", minRealm: 1, mobName: ["Huyết Mãng", "Yêu Hồ"], eAtk: 100, eDef: 30, eHp: 800, expMin: 100, expMax: 150, ltMin: 15, ltMax: 30, dropRate: 0.4 },
-    { id: 2, name: "Vạn Cốt Cốc", minRealm: 2, mobName: ["Khung Cốt Lính", "Oán Hồn"], eAtk: 800, eDef: 250, eHp: 8000, expMin: 800, expMax: 1200, ltMin: 150, ltMax: 300, dropRate: 0.5 },
-    { id: 3, name: "Huyết Hải Bí Cảnh", minRealm: 3, mobName: ["Huyết Ma", "Giao Long"], eAtk: 6000, eDef: 2000, eHp: 80000, expMin: 5000, expMax: 10000, ltMin: 1000, ltMax: 2500, dropRate: 0.6 },
-    { id: 4, name: "Hư Không Liệt Thổ", minRealm: 4, mobName: ["Hư Không Cự Thú", "Ma Vương"], eAtk: 50000, eDef: 15000, eHp: 1000000, expMin: 50000, expMax: 120000, ltMin: 15000, ltMax: 30000, dropRate: 0.7 }
+    { id: 0, name: "Ngoại Ô Thôn Làng", minRealm: 0, mobName: ["Lợn Rừng", "Sói Xám"], eAtk: 15, eDef: 2, eHp: 50, expMin: 15, expMax: 25, ltMin: 2, ltMax: 5, dropRate: 0.1 },
+    { id: 1, name: "Yêu Thú Sâm Lâm", minRealm: 1, mobName: ["Huyết Mãng", "Yêu Hồ"], eAtk: 100, eDef: 30, eHp: 800, expMin: 100, expMax: 150, ltMin: 15, ltMax: 30, dropRate: 0.1 },
+    { id: 2, name: "Vạn Cốt Cốc", minRealm: 2, mobName: ["Khung Cốt Lính", "Oán Hồn"], eAtk: 800, eDef: 250, eHp: 8000, expMin: 800, expMax: 1200, ltMin: 150, ltMax: 300, dropRate: 0.1 },
+    { id: 3, name: "Huyết Hải Bí Cảnh", minRealm: 3, mobName: ["Huyết Ma", "Giao Long"], eAtk: 6000, eDef: 2000, eHp: 80000, expMin: 5000, expMax: 10000, ltMin: 1000, ltMax: 2500, dropRate: 0.1 },
+    { id: 4, name: "Hư Không Liệt Thổ", minRealm: 4, mobName: ["Hư Không Cự Thú", "Ma Vương"], eAtk: 50000, eDef: 15000, eHp: 1000000, expMin: 50000, expMax: 120000, ltMin: 15000, ltMax: 30000, dropRate: 0.1 }
 ];
 
 const itemPrices = { "Hồi Huyết Đan": 20, "Phá Cảnh Đan": 100, "Thảo Dược": 5, "Khoáng Thạch": 8, "Tài Liệu Yêu Thú": 15 };
 
 const dbCongPhap = {
-    "Hỏa Cầu Thuật": { mult: 1.5, mpCost: 10 },
-    "Thanh Phong Kiếm Quyết": { mult: 2, mpCost: 18 },
-    "Lôi Ấn": { mult: 2.8, mpCost: 30 }
+    "Hỏa Cầu Thuật": { mult: 1.5, mpCost: 150 },
+    "Thanh Phong Kiếm Quyết": { mult: 2, mpCost: 200 },
+    "Lôi Ấn": { mult: 2.8, mpCost: 280 },
+    "Cửu Hà Kiếm Quyết": { mult: 2, mpCost: 200 },
+    "Thiên Lôi Dẫn": { mult: 3, mpCost: 350 },
+    "Phá Thiên Nhất Kích": { mult: 5, mpCost: 600 }
 };
+
+function getCongPhapInfo(skillName) {
+    return dbCongPhap[skillName] || { mult: 1.5, mpCost: 10 };
+}
 
 let defaultPlayer = {
     canhGioiIndex: 0,
@@ -166,17 +173,17 @@ function normalizePlayer(savedPlayer = {}) {
 
 function normalizeVietnameseText(value) {
     const legacyTextMap = {
-        "TÃ¡n Tu": "Tán Tu",
-        "Kiáº¿m TÃ´ng": "Kiếm Tông",
-        "DÆ°á»£c Cá»‘c": "Dược Cốc",
-        "Ma TÃ´ng": "Ma Tông",
-        "Há»“i Huyáº¿t Äan": "Hồi Huyết Đan",
-        "PhÃ¡ Cáº£nh Äan": "Phá Cảnh Đan",
-        "Tháº£o DÆ°á»£c": "Thảo Dược",
-        "KhoÃ¡ng Tháº¡ch": "Khoáng Thạch",
-        "TÃ i Liá»‡u YÃªu ThÃº": "Tài Liệu Yêu Thú",
-        "TÃºi Trá»¯ Váº­t": "Túi Trữ Vật",
-        "ThiÃªn Äáº¡o Káº¿t Tinh": "Thiên Đạo Kết Tinh"
+        "Tán Tu": "Tán Tu",
+        "Kiếm Tông": "Kiếm Tông",
+        "Dược Cốc": "Dược Cốc",
+        "Ma Tông": "Ma Tông",
+        "Hồi Huyết Đan": "Hồi Huyết Đan",
+        "Phá Cảnh Đan": "Phá Cảnh Đan",
+        "Thảo Dược": "Thảo Dược",
+        "Khoáng Thạch": "Khoáng Thạch",
+        "Tài Liệu Yêu Thú": "Tài Liệu Yêu Thú",
+        "Túi Trữ Vật": "Túi Trữ Vật",
+        "Thiên Đạo Kết Tinh": "Thiên Đạo Kết Tinh"
     };
     return legacyTextMap[value] || value;
 }
@@ -190,11 +197,13 @@ function normalizeInventoryKeys(inventory) {
 }
 
 window.onload = function() {
+    if (!document.getElementById('game-container')) return;
+
     loadGame();
     if(!player.currentQuest) generateQuest();
     updateUI();
     addLog("Hệ thống khởi động. Nhục thân tuy phàm, Đạo tâm bất diệt!", "system");
-    setInterval(() => { saveGame(false); player.veBiCanh++; updateUI(); }, 30000); 
+    setInterval(() => { saveGame(false); updateUI(); }, 30000); 
     passiveCultivationInterval = setInterval(passiveTuLuyen, 3000); // 3s nhận Tu vi 1 lần
 };
 
@@ -253,9 +262,8 @@ function renderSkills() {
     if (!select) return;
     select.innerHTML = `<option value="">[Đánh Thường]</option>`;
     player.congPhapHocDuoc.forEach(sp => {
-        if (!dbCongPhap[sp]) return;
         let selected = (player.trangBiCongPhap === sp) ? "selected" : "";
-        let info = dbCongPhap[sp];
+        let info = getCongPhapInfo(sp);
         select.innerHTML += `<option value="${sp}" ${selected}>${sp} (Dmg x${info.mult}, tốn ${info.mpCost}MP)</option>`;
     });
 }
@@ -265,7 +273,11 @@ function changeMap() {
     activeEnemy = null; // Đổi map thì reset quái đang đánh
     updateEnemyUI();
 }
-function equipSkill() { player.trangBiCongPhap = document.getElementById('skill-selection').value; }
+function equipSkill() {
+    player.trangBiCongPhap = document.getElementById('skill-selection').value;
+    saveGame(false);
+    updateUI();
+}
 
 function updateUI() {
     player = normalizePlayer(player);
@@ -289,7 +301,7 @@ function updateUI() {
     document.getElementById('so-ve-bicong').innerText = player.veBiCanh;;
 
     let isMajorBreak = (player.tieuCanhGioi === major.maxLevel);
-    document.getElementById('ty-le-dot-pha').innerText = (player.canhGioiIndex >= dsCanhGioi.length-1 && isMajorBreak) ? "MAX" : `${isMajorBreak ? major.rate : 70}% (+${player.buffDotPha}%)`;
+    document.getElementById('ty-le-dot-pha').innerText = (player.canhGioiIndex >= dsCanhGioi.length-1 && isMajorBreak) ? "MAX" : `${isMajorBreak ? major.rate : 70}% (+${player.buffDotPha.toFixed(1)}%)`;
     document.getElementById('so-bua-chu').innerText = player.buaChu;
     document.getElementById('buff-tu-khi').innerText = player.buffTuKhi + " lượt";
     document.getElementById('tong-mon').innerText = player.tongMon || "Tán Tu";
@@ -347,7 +359,7 @@ function renderEquipment() {
 
     equips.forEach(eq => {
         let item = player.trangBi[eq.key];
-        let cost = (item.level + 1) * 100 * (player.canhGioiIndex + 1); // Cost scale theo cảnh giới
+        let cost = (item.level + 1) * 300 * (player.canhGioiIndex + 1); // Cost scale theo cảnh giới
         list.innerHTML += `
             <div class="box-item flex-between">
                 <div>
@@ -446,19 +458,14 @@ function submitQuest() {
 
 function craftItem(itemName) {
     if (itemName === 'Hồi Huyết Đan') {
-        if ((player.inventory["Thảo Dược"]||0) >= 2) {
-            player.inventory["Thảo Dược"] -= 2;
-            player.inventory["Hồi Huyết Đan"] = (player.inventory["Hồi Huyết Đan"]||0) + 1;
-            addLog("Luyện chế thành công Hồi Huyết Đan.", "log-system");
+        if (itemName === 'Hồi Huyết Đan' && (player.inventory["Thảo Dược"]||0) >= 2) {
+        player.inventory["Thảo Dược"] -= 2; player.inventory["Hồi Huyết Đan"] = (player.inventory["Hồi Huyết Đan"]||0) + 1;
+        addLog("Luyện thành công Hồi Huyết Đan.", "system");
         } else addLog("Thiếu Thảo Dược để luyện đan!", "log-combat");
-    } else if (itemName === 'Phá Cảnh Đan') {
-        if ((player.inventory["Thảo Dược"]||0) >= 5 && (player.inventory["Khoáng Thạch"]||0) >= 2) {
-            player.inventory["Thảo Dược"] -= 5;
-            player.inventory["Khoáng Thạch"] -= 2;
-            player.inventory["Phá Cảnh Đan"] = (player.inventory["Phá Cảnh Đan"]||0) + 1;
-            addLog("Luyện chế thành công Phá Cảnh Đan.", "log-system");
-        } else addLog("Thiếu nguyên liệu luyện Phá Cảnh Đan!", "log-combat");
-    }
+    } else if (itemName === 'Phá Cảnh Đan' && (player.inventory["Thảo Dược"]||0) >= 5 && (player.inventory["Khoáng Thạch"]||0) >= 2) {
+        player.inventory["Thảo Dược"] -= 5; player.inventory["Khoáng Thạch"] -= 2; player.inventory["Phá Cảnh Đan"] = (player.inventory["Phá Cảnh Đan"]||0) + 1;
+        addLog("Luyện thành công Phá Cảnh Đan.", "system");
+    } else addLog("Thiếu nguyên liệu luyện đan!", "system", "log-combat");
     updateUI();
 }
 
@@ -508,8 +515,11 @@ function useItem(itemName) {
         else if (itemName.startsWith("Bí Kíp - ")) {
             let skillName = itemName.replace("Bí Kíp - ", "");
             if(!player.congPhapHocDuoc.includes(skillName)) {
-                player.congPhapHocDuoc.push(skillName); addLog(`Tuyệt học! Lĩnh ngộ [${skillName}].`, "system", "log-kyngo");
+                player.congPhapHocDuoc.push(skillName);
+                if (!player.trangBiCongPhap) player.trangBiCongPhap = skillName;
+                addLog(`Tuyệt học! Lĩnh ngộ [${skillName}]. Đã có thể trang bị trong mục Công Pháp.`, "system", "log-kyngo");
             } else addLog("Đã học công pháp này rồi.", "system");
+            saveGame(false);
         }
         updateUI();
     }
@@ -581,8 +591,11 @@ function useItem(itemName) {
         else if (itemName.startsWith("Bí Kíp - ")) {
             let skillName = itemName.replace("Bí Kíp - ", "");
             if(!player.congPhapHocDuoc.includes(skillName)) {
-                player.congPhapHocDuoc.push(skillName); addLog(`Tuyệt học! Lĩnh ngộ [${skillName}].`, "system", "log-kyngo");
+                player.congPhapHocDuoc.push(skillName);
+                if (!player.trangBiCongPhap) player.trangBiCongPhap = skillName;
+                addLog(`Tuyệt học! Lĩnh ngộ [${skillName}]. Đã có thể trang bị trong mục Công Pháp.`, "system", "log-kyngo");
             } else addLog("Đã học công pháp này rồi.", "system");
+            saveGame(false);
         }
         updateUI();
     }
@@ -666,8 +679,8 @@ function passiveTuLuyen() {
     // Tụ Khí Trận buff
     if (player.buffTuKhi > 0) { exp *= 2; player.buffTuKhi--; }
 
-    player.tuVi += exp;
-    if (player.tuVi > player.maxTuVi) player.tuVi = player.maxTuVi;
+    player.tuVi += exp; 
+    xuLyTichLuyTuVi(); // Gọi hàm xử lý tích lũy
     
     // Log hiển thị thưa thớt để tránh spam
     if (Math.random() < 0.2) addLog(`[Thụ Động] Thiên địa linh khí nhập thể, Tu Vi +${exp}.`, "log-gain");
@@ -682,10 +695,64 @@ function diBiCanh() {
     let map = dsBanDo.find(m => m.id === player.currentMap);
     activeEnemy = {
         name: "Yêu Vương " + map.mobName[0], isBoss: true, isPK: false, mapInfo: map,
-        hp: map.eHp * 5, maxHp: map.eHp * 5, atk: map.eAtk * 2, def: map.eDef * 1.5
+        hp: map.eHp * 10, maxHp: map.eHp * 10, atk: map.eAtk * 3, def: map.eDef * 2
     };
     addLog(`Cánh cửa Bí Cảnh mở ra... Phát hiện [${activeEnemy.name}]!`, "combat", "log-pk");
     updateEnemyUI();
+}
+
+function kiemTraKyNgo() {
+    let tiLeKyNgo = 0.02; // 2% cơ hội kích hoạt kỳ ngộ mỗi khi di chuyển/tìm quái
+
+    // Nếu không trúng tỷ lệ kỳ ngộ, trả về false để tiếp tục đánh quái
+    if (Math.random() > tiLeKyNgo) return false;
+
+    // Tung xúc xắc xem gặp sự kiện gì (0 đến 1)
+    let rollEvent = Math.random();
+    
+    if (rollEvent < 0.03) {
+        // 3% - Nhận Tu Vi (Linh Tuyền)
+        let exp = Math.floor(player.maxTuVi * 0.02);
+        player.tuVi += exp;
+        addLog(`✨[KỲ NGỘ] Rơi xuống đáy vực không chết, phát hiện hồ Linh Tuyền! Nhận ${exp} Tu Vi.`, "system", "log-kyngo");
+        // Nếu đạo hữu đã thêm hàm xuLyTichLuyTuVi() ở yêu cầu trước, hãy gọi nó ở đây:
+        if (typeof xuLyTichLuyTuVi === "function") xuLyTichLuyTuVi();
+        
+    } else if (rollEvent < 0.05) {
+        // 2% - Nhận Linh Thạch
+        let lt = (player.canhGioiIndex + 1) * 100;
+        player.linhThach += lt;
+        addLog(`✨[KỲ NGỘ] Tìm thấy di tích của một vị Tán Tu tọa hóa, thu được ${lt} 💎!`, "system", "log-kyngo");
+        
+    } else if (rollEvent < 0.07) {
+        // 20% - Nhận Vật Phẩm Dược/Khoáng
+        let sl = Math.floor(Math.random() * 5) + 2;
+        player.inventory["Thảo Dược"] = (player.inventory["Thảo Dược"] || 0) + sl;
+        addLog(`✨[KỲ NGỘ] Lạc vào một góc tiên viên nứt nẻ, hái được ${sl} Thảo Dược!`, "system", "log-kyngo");
+        
+    } else if (rollEvent < 0.02) {
+         //Cực Phẩm (Vé Bí Cảnh hoặc Phá Cảnh Đan)
+         if (Math.random() < 0.5) {
+             player.veBiCanh++;
+             addLog(`✨[KỲ NGỘ] Đào được một tấm bia đá giấu 1 [Vé Bí Cảnh]!`, "system", "log-kyngo");
+         } else {
+             player.inventory["Phá Cảnh Đan"] = (player.inventory["Phá Cảnh Đan"] || 0) + 1;
+             addLog(`✨[KỲ NGỘ] Lượm được bảo hạp sứt mẻ chứa 1 [Phá Cảnh Đan]!`, "system", "log-kyngo");
+         }
+         
+    } else {
+        // 15% - Ác Mộng (Mất máu)
+        let matMau = Math.floor(player.khiHuyet * 0.1); // Mất 10% máu hiện tại
+        if (matMau < 1) matMau = 1;
+        player.khiHuyet -= matMau;
+        addLog(`💀[ÁC MỘNG] Đạp trúng kịch độc xướng nha! Mất ${matMau} Khí Huyết.`, "combat", "log-combat");
+        
+        // Kiểm tra xem mất máu xong có chết không
+        if (player.khiHuyet <= 0) handlePlayerDeath("combat");
+    }
+    
+    updateUI();
+    return true; // Trả về true báo hiệu đã xảy ra kỳ ngộ (không gặp quái nữa)
 }
 
 function lichLuyen() {
@@ -696,12 +763,13 @@ function lichLuyen() {
 
     // Nếu không có quái, thì Spawn
     if (!activeEnemy) {
-        if(Math.random() < 0.05) { 
-            player.tuVi+= (player.maxTuVi * 0.2); addLog(`✨[KỲ NGỘ] Rơi xuống vách núi phát hiện hồ Linh Tuyền! Nhận Tu Vi.`, "system", "log-kyngo"); updateUI(); return; 
+        if(Math.random() < 0.1) { // 10% cơ hội gặp kỳ ngộ thay vì quái
+        kiemTraKyNgo();
+        return; // Nếu gặp kỳ ngộ thì mất 1 turn không đánh quái, chờ turn sau
         }
         let map = dsBanDo.find(m => m.id === player.currentMap);
-        if(Math.random() < 0.05 && player.canhGioiIndex > 0) {
-            activeEnemy = { name: "Tán Tu Ác Bá", isBoss: false, isPK: true, mapInfo: map, hp: map.eHp*1.5, maxHp: map.eHp*1.5, atk: map.eAtk*1.2, def: map.eDef*2 };
+        if(Math.random() < 0.01 && player.canhGioiIndex > 0) {
+            activeEnemy = { name: "Tán Tu Ác Bá", isBoss: false, isPK: true, mapInfo: map, hp: map.eHp*3, maxHp: map.eHp*3, atk: map.eAtk*1.2, def: map.eDef*2.5 };
             addLog(`Phát hiện Tán Tu ngáng đường! Tiến vào chiến đấu!`, "combat", "log-pk");
         } else {
             let tenQuai = map.mobName[Math.floor(Math.random() * map.mobName.length)];
@@ -722,8 +790,8 @@ function thucHienGiaoTranh() {
     
     // Bạn đánh Quái
     let dungSkill = false; let pMult = 1;
-    if(player.trangBiCongPhap && dbCongPhap[player.trangBiCongPhap] && Math.random() < 0.25) { 
-        let sInfo = dbCongPhap[player.trangBiCongPhap];
+    if(player.trangBiCongPhap) { 
+        let sInfo = getCongPhapInfo(player.trangBiCongPhap);
         if(player.linhLuc >= sInfo.mpCost) {
             player.linhLuc -= sInfo.mpCost; pMult = sInfo.mult; dungSkill = true;
             addLog(`⚡Xuất chiêu [${player.trangBiCongPhap}] gây sát thương bạo kích!`, "combat", "log-skill");
@@ -750,11 +818,22 @@ function thucHienGiaoTranh() {
         let map = activeEnemy.mapInfo;
         let expGot = activeEnemy.isBoss ? map.expMax*5 : (Math.floor(Math.random() * (map.expMax - map.expMin + 1)) + map.expMin);
         player.tuVi += expGot; 
-        
+        xuLyTichLuyTuVi(); // Gọi hàm xử lý tích lũy
         addLog(`Đã tiêu diệt [${activeEnemy.name}]. Nhận +${expGot} Tu Vi.`, "combat", "log-detail");
         
         // Xử lý Rớt Đồ
         if(activeEnemy.isPK) {
+            const mapDropRate = activeEnemy.mapInfo.dropRate || 0.1;
+            const randomValue = Math.random();
+            if (randomValue < mapDropRate) {
+            // Rơi Vé Bí Cảnh
+            player.veBiCanh += 1;
+            
+            // Thông báo cho đạo hữu biết
+            addLog(`Chúc mừng! Đạo hữu đã kết liễu [${activeEnemy.name}] và thu được 1 Vé Bí Cảnh.`);
+            } else {
+                addLog(`Đạo hữu đã tiêu diệt [${activeEnemy.name}] nhưng không tìm thấy vé bí cảnh.`);
+            }
             player.inventory["Túi Trữ Vật"] = (player.inventory["Túi Trữ Vật"]||0) + 1; addLog(`Cướp được 1 [Túi Trữ Vật]!`, "system", "log-pk");
         } else if (activeEnemy.isBoss) {
             player.linhThach += map.ltMax * 5;
@@ -766,15 +845,15 @@ function thucHienGiaoTranh() {
             }
         } else if (Math.random() < map.dropRate) { 
             let roll = Math.random();
-            if(roll < 0.4) player.inventory["Thảo Dược"] = (player.inventory["Thảo Dược"]||0) + 1; 
-            else if(roll < 0.7) player.inventory["Khoáng Thạch"] = (player.inventory["Khoáng Thạch"]||0) + 1; 
+            if(roll < 0.2) player.inventory["Thảo Dược"] = (player.inventory["Thảo Dược"]||0) + 1; 
+            else if(roll < 0.3) player.inventory["Khoáng Thạch"] = (player.inventory["Khoáng Thạch"]||0) + 1; 
             else player.inventory["Tài Liệu Yêu Thú"] = (player.inventory["Tài Liệu Yêu Thú"]||0) + 1; 
             if(currentLogTab !== 'combat') addLog(`Thu thập được vật phẩm.`, "system", "log-system");
         }
         
         activeEnemy = null; // Xóa quái để lượt sau spawn con mới
     }
-    
+    saveGame();
     updateUI(); updateEnemyUI();
 }
 
@@ -800,6 +879,30 @@ function nghiNgoi() {
 }
 
 // ĐỘT PHÁ - TRỌNG TÂM CỦA GAME
+
+function xuLyTichLuyTuVi() {
+    // Chỉ kích hoạt khi tu vi hiện tại đã vượt qua mức maxTuVi
+    if (player.tuVi > player.maxTuVi) {
+        let tichLuy = player.tuVi - player.maxTuVi;
+        let muoiPhanTramMax = player.maxTuVi * 0.1; // 10% kinh nghiệm yêu cầu
+
+        // Dùng vòng lặp while để xử lý trường hợp nhận được lượng exp khổng lồ cùng lúc (ví dụ ăn đan dược hoặc kỳ ngộ)
+        while (tichLuy >= muoiPhanTramMax) {
+            // Xóa đi phần tu vi tích lũy bằng đúng 10% maxTuVi
+            player.tuVi -= muoiPhanTramMax;
+            
+            // Cộng 0.5% vào buff đột phá (dùng số thập phân)
+            player.buffDotPha += 0.5;
+            
+            // Cập nhật lại lượng tích lũy sau khi trừ
+            tichLuy = player.tuVi - player.maxTuVi;
+            
+            // Ghi log để người chơi biết
+            addLog(`Căn cơ vững chắc! Nén tu vi dư thừa thành công, tỷ lệ đột phá tăng thêm 0.5%.`, "system", "log-gain");
+        }
+    }
+}
+
 function dotPha() {
     let major = dsCanhGioi[player.canhGioiIndex];
     let isMajorBreak = (player.tieuCanhGioi === major.maxLevel);
@@ -931,16 +1034,20 @@ function loadGame() {
     }
 }
 async function initVersion() {
-    let version = "1.0";
-    if (window.AndroidHost && window.AndroidHost.getVersionName) {
-        version = window.AndroidHost.getVersionName();
-    } else if (ipcRenderer && ipcRenderer.invoke) {
-        version = await ipcRenderer.invoke('get-app-version');
+    let version = "1.0.2";
+    try {
+        if (window.AndroidHost && window.AndroidHost.getVersionName) {
+            version = window.AndroidHost.getVersionName();
+        } else if (ipcRenderer && ipcRenderer.invoke) {
+            version = await ipcRenderer.invoke('get-app-version');
+        }
+    } catch (error) {
+        console.warn("Không thể lấy version runtime, dùng version mặc định.", error);
     }
 
     const versionElement = document.getElementById('version-display');
     if (versionElement) {
-        versionElement.innerText = `Phien ban: v${version}`;
+        versionElement.innerText = `Phiên bản: v${version}`;
     }
 }
 
